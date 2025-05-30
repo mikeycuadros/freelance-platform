@@ -22,169 +22,108 @@ const Navbar = () => {
             </span>
           </Link>
 
-          {/* Botón de menú hamburguesa */}
-          <button
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden p-2 rounded-lg hover:bg-gray-100 focus:outline-none"
-          >
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              {isMenuOpen ? (
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              ) : (
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
-              )}
-            </svg>
-          </button>
-
-          {/* Enlaces de navegación para desktop */}
-          <div className="hidden md:flex space-x-8">
-            <Link
-              to="/freelancer"
-              className="text-gray-600 hover:text-purple-900"
-            >
-              Freelancers
+          {/* Enlaces de navegación para pantallas medianas y grandes */}
+          <div className="hidden md:flex items-center justify-center flex-grow space-x-8 mx-4">
+            <Link to="/freelancer" className="text-gray-600 hover:text-purple-900">
+              Buscar Talento
             </Link>
-            <Link
-              to="/categories"
-              className="text-gray-600 hover:text-purple-900"
-            >
-              Categorías
+            <Link to="/categories" className="text-gray-600 hover:text-purple-900">
+              Categorias
             </Link>
-            <Link
-              to="/how-works"
-              className="text-gray-600 hover:text-purple-900"
-            >
-              Cómo funciona
-            </Link>
+            {isAuthenticated && (
+              <Link to="/chats" className="text-gray-600 hover:text-purple-900 flex items-center">
+                Chats
+              </Link>
+            )}
           </div>
 
-          {/* Botones de autenticación para desktop */}
-          <div className="hidden md:flex items-center space-x-4">
+          {/* Botón de menú hamburguesa y elementos de autenticación */}
+          <div className="flex items-center">
             {isAuthenticated ? (
-              <>
+              <div className="hidden md:flex items-center space-x-4">
                 {isAdmin && (
-                  <Link
-                    to="/admin"
-                    className="text-gray-600 hover:text-purple-900"
-                  >
+                  <Link to="/admin" className="text-gray-600 hover:text-purple-900">
                     Admin
                   </Link>
                 )}
-                <Link
-                  to="/chats"
-                  className="text-gray-600 hover:text-purple-900"
-                >
-                  Mensajes
+                <Link to="/profile" className="text-gray-700 hover:text-purple-900 font-medium">
+                  Mi perfil
                 </Link>
-                <Link
-                  to="/profile"
-                  className="text-gray-600 hover:text-purple-900"
-                >
-                  Perfil
-                </Link>
-              </>
+              </div>
             ) : (
-              <>
-                <Link to="/login">
-                  <Button variant="outline">Iniciar sesión</Button>
+              <div className="hidden md:flex items-center space-x-4">
+                <Link to="/login" className="text-gray-700 hover:text-purple-900 font-medium">
+                  Iniciar Sesión
                 </Link>
                 <Link to="/register">
-                  <Button>Registrarse</Button>
+                  <Button className="bg-purple-800 hover:bg-purple-900 text-white px-4 py-2 rounded-md">
+                    Unirse
+                  </Button>
                 </Link>
-              </>
+              </div>
             )}
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="md:hidden p-2 ml-4"
+              aria-label="Menu"
+            >
+              <svg
+                className="w-6 h-6 text-gray-600"
+                fill="none"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                {isMenuOpen ? (
+                  <path d="M6 18L18 6M6 6l12 12" />
+                ) : (
+                  <path d="M4 6h16M4 12h16M4 18h16" />
+                )}
+              </svg>
+            </button>
           </div>
         </div>
 
         {/* Menú móvil */}
         <div
-          className={`${isMenuOpen ? 'block' : 'hidden'} md:hidden mt-4 pb-4`}
+          className={`md:hidden ${isMenuOpen ? 'block' : 'hidden'} pt-4`}
         >
           <div className="flex flex-col space-y-4">
-            <Link
-              to="/freelancer"
-              className="text-gray-600 hover:text-purple-900 py-2"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Freelancers
+            <Link to="/freelancer" className="text-gray-600 hover:text-purple-900">
+              Buscar Talento
             </Link>
-            <Link
-              to="/categories"
-              className="text-gray-600 hover:text-purple-900 py-2"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Categorías
+            <Link to="/categories" className="text-gray-600 hover:text-purple-900">
+              Categorias
             </Link>
-            <Link
-              to="/how-works"
-              className="text-gray-600 hover:text-purple-900 py-2"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Cómo funciona
-            </Link>
+            {isAuthenticated && (
+              <Link to="/chats" className="text-gray-600 hover:text-purple-900">
+                Chats
+              </Link>
+            )}
             {isAuthenticated ? (
               <>
                 {isAdmin && (
-                  <Link
-                    to="/admin"
-                    className="text-gray-600 hover:text-purple-900 py-2"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
+                  <Link to="/admin" className="text-gray-600 hover:text-purple-900">
                     Admin
                   </Link>
                 )}
-                <Link
-                  to="/chats"
-                  className="text-gray-600 hover:text-purple-900 py-2"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Mensajes
-                </Link>
-                <Link
-                  to="/profile"
-                  className="text-gray-600 hover:text-purple-900 py-2"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Perfil
+                <Link to="/profile" className="text-gray-700 hover:text-purple-900 font-medium">
+                  Mi perfil
                 </Link>
               </>
             ) : (
-              <div className="space-y-2 pt-2">
-                <Link 
-                  to="/login"
-                  className="block"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  <Button variant="outline" className="w-full">
-                    Iniciar sesión
+              <>
+                <Link to="/login" className="text-gray-700 hover:text-purple-900 font-medium">
+                  Iniciar Sesión
+                </Link>
+                <Link to="/register">
+                  <Button className="bg-purple-800 hover:bg-purple-900 text-white px-4 py-2 rounded-md w-full">
+                    Unirse
                   </Button>
                 </Link>
-                <Link 
-                  to="/register"
-                  className="block"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  <Button className="w-full">
-                    Registrarse
-                  </Button>
-                </Link>
-              </div>
+              </>
             )}
           </div>
         </div>

@@ -204,24 +204,6 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Servicios populares */}
-      {/* <section className="py-10 px-4 bg-gray-50">
-        <h3 className="text-2xl font-semibold mb-6 text-center">
-          Servicios populares
-        </h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {loadingServices ? (
-            <p>Cargando servicios...</p>
-          ) : errorServices ? (
-            <p>Error al cargar los servicios: {errorServices}</p>
-          ) : (
-            services?.map((service) => (
-              <ServiceCard key={service.id} service={service} />
-            ))
-          )}
-        </div>
-      </section> */}
-
       {/* CTA final */}
       <section className="text-center py-16">
         <h3 className="text-3xl font-semibold mb-4">¿Listo para empezar?</h3>

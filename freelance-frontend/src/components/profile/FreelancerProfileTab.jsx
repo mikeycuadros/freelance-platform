@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "../Button";
+import { toast } from "sonner";
 import {
   getFreelancerById,
   updateFreelancerProfile,
@@ -7,7 +8,6 @@ import {
 
 const FreelancerProfileTab = ({ user }) => {
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState({ text: "", type: "" });
   const [freelancerData, setFreelancerData] = useState({
     title: "",
     description: "",
@@ -38,12 +38,12 @@ const FreelancerProfileTab = ({ user }) => {
 
   // Función para toggle de colapso por sección y índice
   const toggleCollapse = (section, index) => {
-    setCollapsedSections(prev => ({
+    setCollapsedSections((prev) => ({
       ...prev,
       [section]: {
         ...prev[section],
-        [index]: !prev[section][index]
-      }
+        [index]: !prev[section][index],
+      },
     }));
   };
 
@@ -65,10 +65,7 @@ const FreelancerProfileTab = ({ user }) => {
         });
       } catch (error) {
         console.error("Error al cargar datos del freelancer:", error);
-        setMessage({
-          text: "No se pudieron cargar tus datos de freelancer",
-          type: "error",
-        });
+        toast.error("No se pudieron cargar tus datos de freelancer");
       } finally {
         setLoading(false);
       }
@@ -126,16 +123,11 @@ const FreelancerProfileTab = ({ user }) => {
   };
 
   const handleAddExperience = () => {
-    // Validar que al menos tenga empresa y posición
     if (
       newExperience.company.trim() === "" ||
       newExperience.position.trim() === ""
     ) {
-      setMessage({
-        text: "La empresa y el puesto son obligatorios",
-        type: "error",
-      });
-      setTimeout(() => setMessage({ text: "", type: "" }), 3000);
+      toast.error("La empresa y el puesto son obligatorios");
       return;
     }
 
@@ -159,27 +151,27 @@ const FreelancerProfileTab = ({ user }) => {
       ...prev,
       experiences: prev.experiences.filter((_, i) => i !== index),
     }));
-    
+
     // Limpiar el estado de colapso para este elemento
-    setCollapsedSections(prev => {
+    setCollapsedSections((prev) => {
       const newExperiences = { ...prev.experiences };
       delete newExperiences[index];
       // Reindexar los elementos restantes
       const reindexed = {};
       Object.keys(newExperiences)
-        .filter(key => parseInt(key) > index)
-        .forEach(key => {
+        .filter((key) => parseInt(key) > index)
+        .forEach((key) => {
           reindexed[parseInt(key) - 1] = newExperiences[key];
         });
       Object.keys(newExperiences)
-        .filter(key => parseInt(key) < index)
-        .forEach(key => {
+        .filter((key) => parseInt(key) < index)
+        .forEach((key) => {
           reindexed[key] = newExperiences[key];
         });
-      
+
       return {
         ...prev,
-        experiences: reindexed
+        experiences: reindexed,
       };
     });
   };
@@ -209,16 +201,11 @@ const FreelancerProfileTab = ({ user }) => {
   };
 
   const handleAddPortfolio = () => {
-    // Validar que al menos tenga título y descripción
     if (
       newPortfolio.title.trim() === "" ||
       newPortfolio.description.trim() === ""
     ) {
-      setMessage({
-        text: "El título y la descripción son obligatorios",
-        type: "error",
-      });
-      setTimeout(() => setMessage({ text: "", type: "" }), 3000);
+      toast.error("El título y la descripción son obligatorios");
       return;
     }
 
@@ -240,27 +227,27 @@ const FreelancerProfileTab = ({ user }) => {
       ...prev,
       portfolios: prev.portfolios.filter((_, i) => i !== index),
     }));
-    
+
     // Limpiar el estado de colapso para este elemento
-    setCollapsedSections(prev => {
+    setCollapsedSections((prev) => {
       const newPortfolios = { ...prev.portfolios };
       delete newPortfolios[index];
       // Reindexar los elementos restantes
       const reindexed = {};
       Object.keys(newPortfolios)
-        .filter(key => parseInt(key) > index)
-        .forEach(key => {
+        .filter((key) => parseInt(key) > index)
+        .forEach((key) => {
           reindexed[parseInt(key) - 1] = newPortfolios[key];
         });
       Object.keys(newPortfolios)
-        .filter(key => parseInt(key) < index)
-        .forEach(key => {
+        .filter((key) => parseInt(key) < index)
+        .forEach((key) => {
           reindexed[key] = newPortfolios[key];
         });
-      
+
       return {
         ...prev,
-        portfolios: reindexed
+        portfolios: reindexed,
       };
     });
   };
@@ -271,17 +258,10 @@ const FreelancerProfileTab = ({ user }) => {
 
     try {
       await updateFreelancerProfile(user.id, freelancerData);
-      setMessage({
-        text: "Perfil de freelancer actualizado correctamente",
-        type: "success",
-      });
-      setTimeout(() => setMessage({ text: "", type: "" }), 3000);
+      toast.success("Perfil de freelancer actualizado correctamente");
     } catch (error) {
       console.error("Error al actualizar perfil de freelancer:", error);
-      setMessage({
-        text: "Error de conexión al actualizar el perfil",
-        type: "error",
-      });
+      toast.error("Error de conexión al actualizar el perfil");
     } finally {
       setLoading(false);
     }
@@ -301,18 +281,6 @@ const FreelancerProfileTab = ({ user }) => {
   return (
     <div className="bg-white p-6 rounded-lg shadow-md">
       <h2 className="text-xl font-semibold mb-4">Perfil de Freelancer</h2>
-
-      {message.text && (
-        <div
-          className={`p-3 mb-4 rounded ${
-            message.type === "success"
-              ? "bg-green-100 text-green-700"
-              : "bg-red-100 text-red-700"
-          }`}
-        >
-          {message.text}
-        </div>
-      )}
 
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
@@ -421,18 +389,25 @@ const FreelancerProfileTab = ({ user }) => {
                         <div className="flex items-center gap-2">
                           <button
                             type="button"
-                            onClick={() => toggleCollapse('experiences', index)}
+                            onClick={() => toggleCollapse("experiences", index)}
                             className="text-purple-600 hover:text-purple-800 p-1"
                           >
-                            <svg 
+                            <svg
                               className={`w-5 h-5 transform transition-transform ${
-                                collapsedSections.experiences[index] ? 'rotate-180' : ''
-                              }`} 
-                              fill="none" 
-                              stroke="currentColor" 
+                                collapsedSections.experiences[index]
+                                  ? "rotate-180"
+                                  : ""
+                              }`}
+                              fill="none"
+                              stroke="currentColor"
                               viewBox="0 0 24 24"
                             >
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M19 9l-7 7-7-7"
+                              />
                             </svg>
                           </button>
                           <button
@@ -446,7 +421,7 @@ const FreelancerProfileTab = ({ user }) => {
                       </div>
                     </div>
                   </div>
-                  
+
                   {!collapsedSections.experiences[index] && (
                     <>
                       <p className="text-gray-700 mb-3">{exp.description}</p>
@@ -484,7 +459,9 @@ const FreelancerProfileTab = ({ user }) => {
                           <input
                             type="date"
                             name="startDate"
-                            value={exp.startDate ? exp.startDate.split("T")[0] : ""}
+                            value={
+                              exp.startDate ? exp.startDate.split("T")[0] : ""
+                            }
                             onChange={(e) => handleExperienceChange(e, index)}
                             className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-purple-500"
                           />
@@ -636,18 +613,27 @@ const FreelancerProfileTab = ({ user }) => {
                           <div className="flex items-center gap-2">
                             <button
                               type="button"
-                              onClick={() => toggleCollapse('portfolios', index)}
+                              onClick={() =>
+                                toggleCollapse("portfolios", index)
+                              }
                               className="text-purple-600 hover:text-purple-800 p-1"
                             >
-                              <svg 
+                              <svg
                                 className={`w-5 h-5 transform transition-transform ${
-                                  collapsedSections.portfolios[index] ? 'rotate-180' : ''
-                                }`} 
-                                fill="none" 
-                                stroke="currentColor" 
+                                  collapsedSections.portfolios[index]
+                                    ? "rotate-180"
+                                    : ""
+                                }`}
+                                fill="none"
+                                stroke="currentColor"
                                 viewBox="0 0 24 24"
                               >
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M19 9l-7 7-7-7"
+                                />
                               </svg>
                             </button>
                             <button
