@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Freelancer index{% endblock %}
+
+{% block body %}
+    <h1>Freelancer index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Skills</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for freelancer in freelancers %}
+            <tr>
+                <td>{{ freelancer.id }}</td>
+                <td>{{ freelancer.title }}</td>
+                <td>{{ freelancer.description }}</td>
+                <td>{{ freelancer.skills ? freelancer.skills|join(', ') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_freelancer_show', {'id': freelancer.id}) }}">show</a>
+                    <a href="{{ path('app_freelancer_edit', {'id': freelancer.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_freelancer_new') }}">Create new</a>
+{% endblock %}
