@@ -6,6 +6,7 @@ import {
   updateFreelancerProfile,
 } from "../../services/freelancer";
 import Spinner from "../Spinner";
+import { getAllCategories } from "../../services/category";
 
 const FreelancerProfileTab = ({ user }) => {
   const [loading, setLoading] = useState(false);
@@ -17,7 +18,6 @@ const FreelancerProfileTab = ({ user }) => {
     experiences: [],
     portfolios: [],
   });
-  const [newSkill, setNewSkill] = useState("");
   const [newExperience, setNewExperience] = useState({
     company: "",
     position: "",
@@ -37,6 +37,9 @@ const FreelancerProfileTab = ({ user }) => {
     portfolios: {},
   });
 
+  const [categoriesWithSkills, setCategoriesWithSkills] = useState([]);
+  const [selectedCategoryId, setSelectedCategoryId] = useState("");
+
   // Función para toggle de colapso por sección y índice
   const toggleCollapse = (section, index) => {
     setCollapsedSections((prev) => ({
@@ -51,29 +54,66 @@ const FreelancerProfileTab = ({ user }) => {
   // Cargar datos del freelancer
   useEffect(() => {
     const fetchFreelancerData = async () => {
-      if (!user || !user.id) return;
+      if (!user || !user.id) {
+        setLoading(false); // Asegurarse de que loading se desactive si no hay usuario
+        return;
+      }
 
       setLoading(true);
       try {
-        const data = await getFreelancerById(user.id);
+        const data = await getFreelancerById(); // Obtener el freelancer del usuario autenticado
         setFreelancerData({
-          title: data.title || "",
-          description: data.description || "",
-          hourlyRate: data.hourlyRate || "",
+          title: data.title ?? "",
+          description: data.description ?? "",
+          hourlyRate:
+            data.hourlyRate !== undefined && data.hourlyRate !== null
+              ? data.hourlyRate
+              : "",
           skills: data.skills || [],
           experiences: data.experiences || [],
           portfolios: data.portfolios || [],
         });
       } catch (error) {
-        console.error("Error al cargar datos del freelancer:", error);
-        toast.error("No se pudieron cargar tus datos de freelancer");
+        // Si el error es 404, es normal para un usuario nuevo
+        if (error.message === "404") {
+          // Inicializar con datos vacíos
+          setFreelancerData({
+            title: "",
+            description: "",
+            hourlyRate: "",
+            skills: [],
+            experiences: [],
+            portfolios: [],
+          });
+        } else {
+          console.error("Error al cargar datos del freelancer:", error);
+          // Mostrar un mensaje de error más específico si no es un 404
+          if (error.message.includes("401")) {
+            toast.error("No autorizado. Por favor, inicia sesión de nuevo.");
+          } else {
+            toast.error("Error al cargar tus datos de freelancer.");
+          }
+        }
       } finally {
         setLoading(false);
       }
     };
 
     fetchFreelancerData();
-  }, [user]);
+  }, [user]); // Dependencia en 'user' para re-ejecutar si el usuario cambia
+
+  // Obtener todas las skills únicas de las categorías
+  useEffect(() => {
+    const fetchSkills = async () => {
+      try {
+        const categories = await getAllCategories();
+        setCategoriesWithSkills(categories);
+      } catch (error) {
+        console.error("Error al cargar las skills de las categorías", error);
+      }
+    };
+    fetchSkills();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -83,21 +123,20 @@ const FreelancerProfileTab = ({ user }) => {
     }));
   };
 
-  const handleAddSkill = () => {
-    if (newSkill.trim() !== "") {
-      setFreelancerData((prev) => ({
-        ...prev,
-        skills: [...prev.skills, newSkill.trim()],
-      }));
-      setNewSkill("");
-    }
-  };
-
-  const handleRemoveSkill = (index) => {
-    setFreelancerData((prev) => ({
-      ...prev,
-      skills: prev.skills.filter((_, i) => i !== index),
-    }));
+  const handleToggleSkill = (skill) => {
+    setFreelancerData((prev) => {
+      if (prev.skills.includes(skill)) {
+        return {
+          ...prev,
+          skills: prev.skills.filter((s) => s !== skill),
+        };
+      } else {
+        return {
+          ...prev,
+          skills: [...prev.skills, skill],
+        };
+      }
+    });
   };
 
   const handleExperienceChange = (e, index) => {
@@ -317,42 +356,88 @@ const FreelancerProfileTab = ({ user }) => {
 
         <div className="mb-6">
           <label className="block text-gray-700 mb-2">Habilidades</label>
-          <div className="flex flex-wrap gap-2 mb-2">
-            {freelancerData.skills.map((skill, index) => (
-              <div
-                key={index}
-                className="bg-purple-100 text-purple-800 px-3 py-1 rounded-full flex items-center"
-              >
-                {skill}
-                <button
-                  type="button"
-                  onClick={() => handleRemoveSkill(index)}
-                  className="ml-2 text-purple-600 hover:text-purple-800"
-                >
-                  ×
-                </button>
+          {/* Mostrar habilidades seleccionadas */}
+          <div className="mb-4">
+            <div className="font-semibold text-gray-700 mb-1">
+              Seleccionadas:
+            </div>
+            {freelancerData.skills.length === 0 ? (
+              <div className="text-gray-400 text-sm mb-2">
+                No has seleccionado habilidades aún.
               </div>
-            ))}
+            ) : (
+              <div className="flex flex-wrap gap-2 mb-2">
+                {freelancerData.skills.map((skill) => (
+                  <span
+                    key={skill}
+                    className="bg-purple-800 text-white px-3 py-1 rounded-full flex items-center text-sm"
+                  >
+                    {skill}
+                    <button
+                      type="button"
+                      onClick={() => handleToggleSkill(skill)}
+                      className="ml-2 text-white hover:text-red-200 focus:outline-none"
+                      title="Quitar habilidad"
+                    >
+                      ×
+                    </button>
+                  </span>
+                ))}
+              </div>
+            )}
           </div>
-          <div className="flex">
-            <input
-              type="text"
-              value={newSkill}
-              onChange={(e) => setNewSkill(e.target.value)}
-              className="flex-grow border border-gray-300 rounded-l px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
-              placeholder="Añadir habilidad"
-              onKeyPress={(e) =>
-                e.key === "Enter" && (e.preventDefault(), handleAddSkill())
-              }
-            />
-            <button
-              type="button"
-              onClick={handleAddSkill}
-              className="bg-purple-800 text-white px-4 py-2 rounded-r hover:bg-purple-900"
+          {/* Select para elegir categoría */}
+          <div className="mb-4">
+            <select
+              value={selectedCategoryId}
+              onChange={(e) => setSelectedCategoryId(e.target.value)}
+              className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
             >
-              Añadir
-            </button>
+              <option value="">Selecciona una categoría</option>
+              {categoriesWithSkills.map((cat) => (
+                <option key={cat.id} value={cat.id}>
+                  {cat.name}
+                </option>
+              ))}
+            </select>
           </div>
+          {selectedCategoryId && (
+            <div className="mb-2">
+              <div className="font-semibold text-purple-800 mb-2">
+                {
+                  categoriesWithSkills.find(
+                    (cat) => cat.id === parseInt(selectedCategoryId)
+                  )?.name
+                }
+              </div>
+              <div className="flex flex-wrap gap-2 mb-2">
+                {(
+                  categoriesWithSkills.find(
+                    (cat) => cat.id === parseInt(selectedCategoryId)
+                  )?.skills || []
+                ).map((skill) => {
+                  const selected = freelancerData.skills.includes(skill);
+                  return (
+                    <button
+                      key={skill}
+                      type="button"
+                      onClick={() => handleToggleSkill(skill)}
+                      className={`px-3 py-1 rounded-full border transition-colors duration-150 text-sm focus:outline-none
+                        ${
+                          selected
+                            ? "bg-purple-800 text-white border-purple-800 shadow"
+                            : "bg-purple-100 text-purple-800 border-purple-300 hover:bg-purple-200"
+                        }
+                      `}
+                    >
+                      {skill}
+                      {selected && <span className="ml-1">✔️</span>}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Sección de Experiencias */}

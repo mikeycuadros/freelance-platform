@@ -30,7 +30,7 @@ const FreelancerDetail = () => {
     } else {
       try {
         // Verificar si ya existe un chat o crear uno nuevo
-        const chat = await findOrCreateChat(user.id, parseInt(id));
+        const chat = await findOrCreateChat(user.id, person.userId.id);
 
         // Redirigir al chat
         navigate(`/chat/${chat.id}`);
@@ -218,8 +218,8 @@ const FreelancerDetail = () => {
                         ${person.hourlyRate}/hr
                       </p>
                       <div className="flex gap-2 mt-3">
-                        {/* Mostrar el botón solo si no es el perfil del usuario actual */}
-                        {isAuthenticated && user.id !== parseInt(id) && (
+                        {/* Mostrar el botón solo si el usuario está autenticado y no es su propio perfil */}
+                        {isAuthenticated && user.id !== person.userId.id && (
                           <button
                             onClick={handleContactClick}
                             className="px-4 py-2 bg-purple-800 text-white rounded-md flex items-center justify-center hover:bg-purple-900"

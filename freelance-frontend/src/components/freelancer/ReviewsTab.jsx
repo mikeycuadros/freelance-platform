@@ -59,7 +59,7 @@ const ReviewsTab = ({
             </p>
           </div>
         )}
-        {isAuthenticated && user && user.id !== parseInt(id) && (
+        {isAuthenticated && user && user.id !== person.userId.id && (
           <div className="mb-6 p-4 border rounded-lg bg-gray-50">
             <h3 className="text-lg font-semibold mb-3">Añadir una reseña</h3>
             {reviewMessage.text && (

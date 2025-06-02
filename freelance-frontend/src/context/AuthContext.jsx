@@ -55,7 +55,8 @@ export const AuthProvider = ({ children }) => {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
         body: JSON.stringify({
-          password: newPassword
+          currentPassword: oldPassword,
+          password: newPassword,
         }),
       });
 
@@ -63,10 +64,13 @@ export const AuthProvider = ({ children }) => {
       if (response.ok) {
         return { success: true, message: "Password updated successfully" };
       }
-      return data;
+      return {
+        success: false,
+        message: data.error || "Error updating password",
+      };
     } catch (error) {
       console.error("Update password error:", error);
-      return { message: "Error updating password" };
+      return { success: false, message: "Error updating password" };
     }
   };
 
@@ -100,25 +104,25 @@ export const AuthProvider = ({ children }) => {
     try {
       // Mapear roles a un formato que el backend pueda entender
       let rolesToSend = [];
-      
-      if (userData.roles === 'freelancer') {
-        rolesToSend.push('ROLE_FREELANCER');
-      } else if (userData.roles === 'client') {
-        rolesToSend.push('ROLE_CLIENT');
+
+      if (userData.roles === "freelancer") {
+        rolesToSend.push("ROLE_FREELANCER");
+      } else if (userData.roles === "client") {
+        rolesToSend.push("ROLE_CLIENT");
       }
-      
+
       // Crear objeto con datos modificados
       const dataToSend = {
         ...userData,
-        roles: rolesToSend // Enviar el array de roles en el formato correcto
+        roles: rolesToSend, // Enviar el array de roles en el formato correcto
       };
-      
+
       const response = await fetch(`${API_URL}/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(dataToSend),
       });
-  
+
       const data = await response.json();
       if (response.ok) {
         // Si el registro es exitoso, también iniciamos sesión automáticamente
@@ -130,7 +134,10 @@ export const AuthProvider = ({ children }) => {
         localStorage.setItem("user", JSON.stringify(data.user));
         return { success: true, user: data.user };
       }
-      return { success: false, message: data.message || "Error en el registro" };
+      return {
+        success: false,
+        message: data.message || "Error en el registro",
+      };
     } catch (error) {
       console.error("Error de registro:", error);
       return { success: false, message: "Error de conexión" };

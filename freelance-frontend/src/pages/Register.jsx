@@ -51,6 +51,11 @@ const Register = () => {
       return;
     }
 
+    if (form.password.length < 8) {
+      setError("La contraseña debe tener al menos 8 caracteres");
+      return;
+    }
+
     if (!acceptTerms) {
       setError("Debes aceptar los términos y condiciones");
       return;

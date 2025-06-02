@@ -95,20 +95,55 @@ final class FreelancerController extends AbstractController
     }
     
     #[Route("/api/freelancers/{id}", name:"api_freelancer_show", methods:["GET"])]
-    public function apiShow(Freelancer $freelancer, SerializerInterface $serializer): JsonResponse
+    public function apiShow(int $id, EntityManagerInterface $entityManager): JsonResponse
     {
-        $jsonData = $serializer->serialize($freelancer, 'json', ['groups' => 'freelancer:read']);
-        
-        return new JsonResponse($jsonData, Response::HTTP_OK, [], true);
+        // Buscar el freelancer por su ID
+        $freelancer = $entityManager->getRepository(Freelancer::class)->find($id);
+
+        if (!$freelancer) {
+            return $this->json(['error' => 'Freelancer no encontrado'], 404);
+        }
+
+        return $this->json($freelancer, 200, [], ['groups' => 'freelancer:read']);
+    }
+
+    #[Route("/api/user/freelancer", name:"api_user_freelancer_show", methods:["GET"])]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
+    public function apiUserFreelancerShow(EntityManagerInterface $entityManager): JsonResponse
+    {
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+
+        // Buscar el freelancer asociado al usuario autenticado
+        $freelancer = $entityManager->getRepository(Freelancer::class)->findOneBy(['userId' => $user]);
+
+        if (!$freelancer) {
+            // Si el usuario no tiene un perfil de freelancer, devolvemos 404
+            return $this->json(['error' => 'Perfil de freelancer no encontrado para este usuario'], 404);
+        }
+
+        // Devolver el objeto freelancer serializado
+        return $this->json($freelancer, 200, [], ['groups' => 'freelancer:read']);
     }
     
     #[Route("/api/freelancers/{id}", name:"api_freelancer_update", methods:["PUT", "PATCH"])]
-    public function apiUpdate(Request $request, Freelancer $freelancer, EntityManagerInterface $entityManager, SerializerInterface $serializer): JsonResponse
+    public function apiUpdate(Request $request, int $id, EntityManagerInterface $entityManager, SerializerInterface $serializer): JsonResponse
     {
-        // Verificar que el usuario actual tiene permiso para actualizar este freelancer
+        // Obtener el usuario actual
         $user = $this->getUser();
-        if (!$user || $freelancer->getUserId() !== $user) {
+        if (!$user) {
             throw new AccessDeniedException('No tienes permiso para actualizar este perfil de freelancer');
+        }
+
+        // Buscar el freelancer existente o crear uno nuevo
+        $freelancer = $entityManager->getRepository(Freelancer::class)->findOneBy(['userId' => $user]);
+        
+        if (!$freelancer) {
+            // Si no existe, crear uno nuevo
+            $freelancer = new Freelancer();
+            $freelancer->setUserId($user);
+            $freelancer->setCreatedAt(new \DateTimeImmutable());
+            $entityManager->persist($freelancer);
         }
         
         $data = json_decode($request->getContent(), true);
@@ -246,11 +281,13 @@ final class FreelancerController extends AbstractController
             }
         }
         
-        $entityManager->flush();
-        
-        $jsonData = $serializer->serialize($freelancer, 'json', ['groups' => 'freelancer:read']);
-        
-        return new JsonResponse($jsonData, Response::HTTP_OK, [], true);
+        try {
+            $entityManager->flush();
+            $jsonData = $serializer->serialize($freelancer, 'json', ['groups' => 'freelancer:read']);
+            return new JsonResponse($jsonData, Response::HTTP_OK, [], true);
+        } catch (\Exception $e) {
+            return new JsonResponse(['error' => 'Error al actualizar el perfil: ' . $e->getMessage()], Response::HTTP_BAD_REQUEST);
+        }
     }
     
     #[Route("/api/freelancers/{id}", name:"api_freelancer_delete", methods:["DELETE"])]
@@ -261,4 +298,6 @@ final class FreelancerController extends AbstractController
         
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }
+    
+    
 }

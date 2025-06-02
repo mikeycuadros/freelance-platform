@@ -15,9 +15,19 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 
 class SecurityController extends AbstractController
 {
+    private $jwtManager;
+
+    public function __construct(JWTTokenManagerInterface $jwtManager)
+    {
+        $this->jwtManager = $jwtManager;
+    }
+
     #[Route(path: '/login', name: 'app_login')]
     public function login(AuthenticationUtils $authenticationUtils): JsonResponse
     {
@@ -146,6 +156,9 @@ class SecurityController extends AbstractController
     
         // Guardar las entidades relacionadas
         $entityManager->flush();
+
+        // Generar el token JWT
+        $token = $this->jwtManager->create($user);
     
         return new JsonResponse([
             'message' => 'Usuario registrado correctamente',
@@ -154,7 +167,8 @@ class SecurityController extends AbstractController
                 'email' => $user->getEmail(),
                 'username' => $user->getUsername(),
                 'roles' => $user->getRoles()
-            ]
+            ],
+            'token' => $token
         ], Response::HTTP_CREATED);
     }
 }

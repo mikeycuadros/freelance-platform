@@ -123,6 +123,21 @@ final class UserController extends AbstractController
         }
         
         if (isset($data['password']) && !empty($data['password'])) {
+            // Verificar la longitud mínima de la contraseña
+            if (strlen($data['password']) < 8) {
+                return $this->json(['error' => 'La contraseña debe tener al menos 8 caracteres'], Response::HTTP_BAD_REQUEST);
+            }
+
+            // Verificar la contraseña actual si se proporciona
+            if (!isset($data['currentPassword']) || empty($data['currentPassword'])) {
+                return $this->json(['error' => 'Se requiere la contraseña actual'], Response::HTTP_BAD_REQUEST);
+            }
+
+            // Verificar que la contraseña actual sea correcta
+            if (!$passwordHasher->isPasswordValid($user, $data['currentPassword'])) {
+                return $this->json(['error' => 'La contraseña actual es incorrecta'], Response::HTTP_BAD_REQUEST);
+            }
+
             $hashedPassword = $passwordHasher->hashPassword($user, $data['password']);
             $user->setPassword($hashedPassword);
         }

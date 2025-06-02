@@ -58,6 +58,7 @@ security:
     - { path: ^/api/categories/\d+$, roles: PUBLIC_ACCESS }
     - { path: ^/api/freelancers, roles: PUBLIC_ACCESS }
     - { path: ^/api/freelancers/\d+$, roles: PUBLIC_ACCESS }
+    - { path: ^/api/user/freelancer$, roles: IS_AUTHENTICATED_FULLY }
     - { path: ^/api/chats, roles: IS_AUTHENTICATED_FULLY }
     - { path: ^/api/chats/\d+$, roles: IS_AUTHENTICATED_FULLY }
     - { path: ^/api/messages, roles: IS_AUTHENTICATED_FULLY }
