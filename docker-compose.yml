@@ -1,0 +1,79 @@
+services:
+  freelance-frontend:
+    build:
+      context: ./freelance-frontend
+      dockerfile: Dockerfile
+    container_name: freelance-frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./freelance-frontend:/app
+      - /app/node_modules
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    networks:
+      - app-network
+
+  freelance-backend:
+    build:
+      context: ./freelance-backend
+      dockerfile: Dockerfile
+    container_name: freelance-backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./freelance-backend:/app
+    networks:
+      - app-network
+    command: bash -c "composer install && php -S 0.0.0.0:8000 -t public"
+
+  database:
+    image: mysql:8.0
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    env_file:
+      - .env
+    volumes:
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - database_data:/var/lib/mysql
+    networks:
+      - app-network
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: database
+      PMA_USER: ${MYSQL_USER}
+      PMA_PASSWORD: ${MYSQL_PASSWORD}
+    env_file:
+      - .env
+    depends_on:
+      - database
+    networks:
+      - app-network
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    container_name: nginx
+    ports:
+      - "80:80"
+    networks:
+      - app-network
+    depends_on:
+      - freelance-frontend
+      - freelance-backend
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  database_data:
