@@ -5,8 +5,8 @@ const Footer = () => {
   return (
     <footer className="bg-white border-t border-gray-200 py-5">
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          {/* Para Clientes */}
+        {/* <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          
           <div>
             <h3 className="font-semibold text-lg mb-4">Para Clientes</h3>
             <ul className="space-y-3">
@@ -33,7 +33,7 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Para Freelancers */}
+          
           <div>
             <h3 className="font-semibold text-lg mb-4">Para Freelancers</h3>
             <ul className="space-y-3">
@@ -60,7 +60,7 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Recursos */}
+          
           <div>
             <h3 className="font-semibold text-lg mb-4">Recursos</h3>
             <ul className="space-y-3">
@@ -87,7 +87,6 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Compañía */}
           <div>
             <h3 className="font-semibold text-lg mb-4">Compañía</h3>
             <ul className="space-y-3">
@@ -113,14 +112,11 @@ const Footer = () => {
               </li>
             </ul>
           </div>
-        </div>
+        </div> */}
 
-        <div className="border-t border-gray-200 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
+        <div className="flex flex-col md:flex-row justify-between items-center">
           <div className="flex items-center mb-4 md:mb-0">
-            <div className="bg-purple-800 text-white rounded-full w-8 h-8 flex items-center justify-center mr-2">
-              <span className="font-bold">FL</span>
-            </div>
-            <span className="text-xl font-bold text-purple-800">FreelancePro</span>
+          <img src="/logo.png" alt="Logo" className="h-8 mr-2 object-cover" />
           </div>
 
           <div className="flex space-x-6 mb-4 md:mb-0">
@@ -152,7 +148,7 @@ const Footer = () => {
           </div>
 
           <p className="text-gray-500 text-sm">
-            © 2025 FreelancePro. Todos los derechos reservados.
+            © 2025 SkillNet. Todos los derechos reservados.
           </p>
         </div>
       </div>

@@ -1,13 +1,11 @@
 import React from "react";
 import { Button } from "../Button";
 
-const SettingsTab = ({ 
-  user, 
-  formData, 
-  handleChange, 
-  handleUpdatePassword, 
-  handleLogout, 
-  setMessage 
+const SettingsTab = ({
+  formData,
+  handleChange,
+  handleUpdatePassword,
+  handleLogout,
 }) => {
   return (
     <div className="bg-white p-6 rounded-lg shadow-md">
@@ -30,9 +28,7 @@ const SettingsTab = ({
             />
           </div>
           <div className="mb-3">
-            <label className="block text-gray-700 mb-2">
-              Nueva contraseña
-            </label>
+            <label className="block text-gray-700 mb-2">Nueva contraseña</label>
             <input
               type="password"
               name="newPassword"

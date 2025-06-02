@@ -14,12 +14,7 @@ const Navbar = () => {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center">
-            <div className="bg-purple-800 text-white rounded-full w-8 h-8 flex items-center justify-center mr-2">
-              <span className="font-bold">FL</span>
-            </div>
-            <span className="text-xl font-bold text-purple-800">
-              FreelancePro
-            </span>
+            <img src="/logo.png" alt="Logo" className=" h-8 mr-2 object-cover" />
           </Link>
 
           {/* Enlaces de navegación para pantallas medianas y grandes */}

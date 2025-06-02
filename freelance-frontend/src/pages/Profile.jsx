@@ -4,6 +4,7 @@ import { useAuth } from "../context/AuthContext";
 import PersonalInfoTab from "../components/profile/PersonalInfoTab";
 import SettingsTab from "../components/profile/SettingsTab";
 import FreelancerProfileTab from "../components/profile/FreelancerProfileTab";
+import Page from "../components/Page";
 
 const Profile = () => {
   const { user, logout, updateUsername, updatePassword } = useAuth();
@@ -26,7 +27,7 @@ const Profile = () => {
         nombre: user.username || user.name || "Usuario",
         correo: user.email || "usuario@example.com",
       });
-      
+
       // Verificar si el usuario es freelancer
       setIsFreelancer(user.roles && user.roles.includes("ROLE_FREELANCER"));
     }
@@ -96,86 +97,84 @@ const Profile = () => {
   };
 
   return (
-    <div className="min-h-screen px-6 py-10 bg-gray-50">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold text-center mb-8">Mi Perfil</h1>
+    <Page title="Perfil">
+      <div className="min-h-screen px-6 py-10 bg-gray-50">
+        <div className="max-w-4xl mx-auto">
+          <h1 className="text-3xl font-bold text-center mb-8">Mi Perfil</h1>
 
-        {/* Tabs de navegación */}
-        <div className="flex border-b mb-6">
-          <button
-            className={`px-4 py-2 font-medium ${
-              activeTab === "info"
-                ? "border-b-2 border-purple-800 text-purple-800"
-                : "text-gray-500"
-            }`}
-            onClick={() => setActiveTab("info")}
-          >
-            Información Personal
-          </button>
-          
-          {/* Mostrar pestaña de freelancer solo si el usuario tiene ese rol */}
-          {isFreelancer && (
+          {/* Tabs de navegación */}
+          <div className="flex border-b mb-6">
             <button
               className={`px-4 py-2 font-medium ${
-                activeTab === "freelancer"
+                activeTab === "info"
                   ? "border-b-2 border-purple-800 text-purple-800"
                   : "text-gray-500"
               }`}
-              onClick={() => setActiveTab("freelancer")}
+              onClick={() => setActiveTab("info")}
             >
-              Perfil Freelancer
+              Información Personal
             </button>
-          )}
-          
-          <button
-            className={`px-4 py-2 font-medium ${
-              activeTab === "settings"
-                ? "border-b-2 border-purple-800 text-purple-800"
-                : "text-gray-500"
-            }`}
-            onClick={() => setActiveTab("settings")}
-          >
-            Configuración
-          </button>
-        </div>
 
-        {/* Mensajes de estado */}
-        {message.text && (
-          <div
-            className={`p-3 mb-4 rounded ${
-              message.type === "success"
-                ? "bg-green-100 text-green-700"
-                : "bg-red-100 text-red-700"
-            }`}
-          >
-            {message.text}
+            {/* Mostrar pestaña de freelancer solo si el usuario tiene ese rol */}
+            {isFreelancer && (
+              <button
+                className={`px-4 py-2 font-medium ${
+                  activeTab === "freelancer"
+                    ? "border-b-2 border-purple-800 text-purple-800"
+                    : "text-gray-500"
+                }`}
+                onClick={() => setActiveTab("freelancer")}
+              >
+                Perfil Freelancer
+              </button>
+            )}
+
+            <button
+              className={`px-4 py-2 font-medium ${
+                activeTab === "settings"
+                  ? "border-b-2 border-purple-800 text-purple-800"
+                  : "text-gray-500"
+              }`}
+              onClick={() => setActiveTab("settings")}
+            >
+              Configuración
+            </button>
           </div>
-        )}
 
-        {/* Contenido según la pestaña activa */}
-        {activeTab === "info" && (
-          <PersonalInfoTab 
-            user={user}
-          />
-        )}
-        
-        {/* Pestaña de perfil freelancer */}
-        {activeTab === "freelancer" && isFreelancer && (
-          <FreelancerProfileTab user={user} />
-        )}
+          {/* Mensajes de estado */}
+          {message.text && (
+            <div
+              className={`p-3 mb-4 rounded ${
+                message.type === "success"
+                  ? "bg-green-100 text-green-700"
+                  : "bg-red-100 text-red-700"
+              }`}
+            >
+              {message.text}
+            </div>
+          )}
 
-        {activeTab === "settings" && (
-          <SettingsTab
-            user={user}
-            formData={formData}
-            handleChange={handleChange}
-            handleUpdatePassword={handleUpdatePassword}
-            handleLogout={handleLogout}
-            setMessage={setMessage}
-          />
-        )}
+          {/* Contenido según la pestaña activa */}
+          {activeTab === "info" && <PersonalInfoTab user={user} />}
+
+          {/* Pestaña de perfil freelancer */}
+          {activeTab === "freelancer" && isFreelancer && (
+            <FreelancerProfileTab user={user} />
+          )}
+
+          {activeTab === "settings" && (
+            <SettingsTab
+              user={user}
+              formData={formData}
+              handleChange={handleChange}
+              handleUpdatePassword={handleUpdatePassword}
+              handleLogout={handleLogout}
+              setMessage={setMessage}
+            />
+          )}
+        </div>
       </div>
-    </div>
+    </Page>
   );
 };
 
