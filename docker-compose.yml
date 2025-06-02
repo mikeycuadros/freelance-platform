@@ -31,11 +31,6 @@ services:
     image: mysql:8.0
     ports:
       - "3306:3306"
-    environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     env_file:
       - .env
     volumes:
@@ -50,8 +45,6 @@ services:
       - "8080:80"
     environment:
       PMA_HOST: database
-      PMA_USER: ${MYSQL_USER}
-      PMA_PASSWORD: ${MYSQL_PASSWORD}
     env_file:
       - .env
     depends_on:

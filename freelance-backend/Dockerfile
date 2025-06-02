@@ -11,8 +11,15 @@ COPY . .
 # Instalar dependencias de Symfony
 RUN composer install --no-scripts --no-interaction --no-dev --optimize-autoloader
 RUN composer update
-# Generar claves JWT
-RUN php bin/console lexik:jwt:generate-keypair
+# Copiar el entrypoint y darle permisos
+# COPY entrypoint.sh /entrypoint.sh
+# RUN chmod +x /entrypoint.sh
+
+# Exponer el puerto usado por el servidor PHP embebido
 EXPOSE 8000
-# Comando de inicio
-CMD ["php", "-S", "0.0.0.0:8000", "-t", "public"]
+
+# Usar entrypoint personalizado para generar claves en tiempo de ejecución
+# ENTRYPOINT ["/entrypoint.sh"]
+
+# Comando de inicio del servidor
+CMD ["php", "-S", "0.0.0.0:8000", "-t", "public"] 
