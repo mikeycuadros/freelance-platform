@@ -11,6 +11,8 @@ COPY . .
 # Instalar dependencias de Symfony
 RUN composer install --no-scripts --no-interaction --no-dev --optimize-autoloader
 RUN composer update
+# Generar claves JWT
+RUN php bin/console lexik:jwt:generate-keypair
 EXPOSE 8000
 # Comando de inicio
 CMD ["php", "-S", "0.0.0.0:8000", "-t", "public"]
