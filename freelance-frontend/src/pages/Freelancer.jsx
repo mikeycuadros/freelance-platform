@@ -398,7 +398,12 @@ const Freelancer = () => {
               ) : (
                 <>
                   <p className="text-gray-600 mb-4">
-                    Mostrando {freelancers.length} freelancers
+                    {searchTerm ||
+                    categoryFilter ||
+                    experienceLevel !== "Cualquier Experiencia" ||
+                    priceRange < 150
+                      ? `Mostrando ${freelancers.length} de ${allFreelancers.length} freelancers`
+                      : `Total: ${allFreelancers.length} freelancers`}
                   </p>
 
                   {freelancers.length === 0 ? (

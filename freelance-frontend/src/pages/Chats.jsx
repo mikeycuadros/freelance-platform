@@ -96,25 +96,40 @@ const Chats = () => {
                   return (
                     <div
                       key={chat.id}
-                      className="p-4 border-b cursor-pointer hover:bg-gray-50"
+                      className="p-4 border-b cursor-pointer hover:bg-gray-50 transition-colors duration-200"
                       onClick={() =>
                         (window.location.href = `/chat/${chat.id}`)
                       }
                     >
-                      <div className="flex items-center">
-                        <div className="w-10 h-10 bg-purple-200 rounded-full flex items-center justify-center mr-3">
-                          <span className="font-semibold text-purple-800">
-                            {otherUser?.username?.charAt(0) || "U"}
-                          </span>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center">
+                          <div className="w-12 h-12 bg-purple-200 rounded-full flex items-center justify-center mr-3">
+                            <span className="font-semibold text-purple-800 text-lg">
+                              {otherUser?.username?.charAt(0) || "U"}
+                            </span>
+                          </div>
+                          <div>
+                            <h3 className="font-medium text-gray-900">
+                              {otherUser?.username || "Usuario"}
+                            </h3>
+                            <p className="text-sm text-gray-500 truncate max-w-[300px]">
+                              {lastMessage?.content || "No hay mensajes"}
+                            </p>
+                          </div>
                         </div>
-                        <div>
-                          <h3 className="font-medium">
-                            {otherUser?.username || "Usuario"}
-                          </h3>
-                          <p className="text-sm text-gray-500 truncate">
-                            {lastMessage?.content || ""}
-                          </p>
-                        </div>
+                        {lastMessage && (
+                          <div className="text-right">
+                            <span className="text-xs text-gray-400">
+                              {new Date(lastMessage.date).toLocaleDateString()}
+                            </span>
+                            {!lastMessage.read &&
+                              lastMessage.sender?.id !== user.id && (
+                                <div className="mt-1">
+                                  <span className="inline-block w-2 h-2 bg-purple-600 rounded-full"></span>
+                                </div>
+                              )}
+                          </div>
+                        )}
                       </div>
                     </div>
                   );

@@ -10,6 +10,8 @@ import { getAllCategories } from "../../services/category";
 
 const FreelancerProfileTab = ({ user }) => {
   const [loading, setLoading] = useState(false);
+  const [loadingExperience, setLoadingExperience] = useState(null); // Para controlar el loading de cada experiencia
+  const [loadingPortfolio, setLoadingPortfolio] = useState(null); // Para controlar el loading de cada proyecto
   const [freelancerData, setFreelancerData] = useState({
     title: "",
     description: "",
@@ -162,7 +164,7 @@ const FreelancerProfileTab = ({ user }) => {
     }));
   };
 
-  const handleAddExperience = () => {
+  const handleAddExperience = async () => {
     if (
       newExperience.company.trim() === "" ||
       newExperience.position.trim() === ""
@@ -171,49 +173,91 @@ const FreelancerProfileTab = ({ user }) => {
       return;
     }
 
-    setFreelancerData((prev) => ({
-      ...prev,
-      experiences: [...prev.experiences, newExperience],
-    }));
+    setLoadingExperience("new");
+    try {
+      const updatedData = {
+        ...freelancerData,
+        experiences: [...freelancerData.experiences, newExperience],
+      };
 
-    // Limpiar el formulario de nueva experiencia
-    setNewExperience({
-      company: "",
-      position: "",
-      startDate: "",
-      endDate: "",
-      description: "",
-    });
+      await updateFreelancerProfile(user.id, updatedData);
+      setFreelancerData(updatedData);
+      toast.success("Experiencia añadida correctamente");
+
+      // Limpiar el formulario de nueva experiencia
+      setNewExperience({
+        company: "",
+        position: "",
+        startDate: "",
+        endDate: "",
+        description: "",
+      });
+    } catch (error) {
+      console.error("Error al añadir experiencia:", error);
+      toast.error("Error al añadir la experiencia");
+    } finally {
+      setLoadingExperience(null);
+    }
   };
 
-  const handleRemoveExperience = (index) => {
-    setFreelancerData((prev) => ({
-      ...prev,
-      experiences: prev.experiences.filter((_, i) => i !== index),
-    }));
-
-    // Limpiar el estado de colapso para este elemento
-    setCollapsedSections((prev) => {
-      const newExperiences = { ...prev.experiences };
-      delete newExperiences[index];
-      // Reindexar los elementos restantes
-      const reindexed = {};
-      Object.keys(newExperiences)
-        .filter((key) => parseInt(key) > index)
-        .forEach((key) => {
-          reindexed[parseInt(key) - 1] = newExperiences[key];
-        });
-      Object.keys(newExperiences)
-        .filter((key) => parseInt(key) < index)
-        .forEach((key) => {
-          reindexed[key] = newExperiences[key];
-        });
-
-      return {
-        ...prev,
-        experiences: reindexed,
+  const handleUpdateExperience = async (index) => {
+    setLoadingExperience(index);
+    try {
+      const updatedData = {
+        ...freelancerData,
+        experiences: [...freelancerData.experiences],
       };
-    });
+
+      await updateFreelancerProfile(user.id, updatedData);
+      toast.success("Experiencia actualizada correctamente");
+    } catch (error) {
+      console.error("Error al actualizar experiencia:", error);
+      toast.error("Error al actualizar la experiencia");
+    } finally {
+      setLoadingExperience(null);
+    }
+  };
+
+  const handleRemoveExperience = async (index) => {
+    setLoadingExperience(index);
+    try {
+      const updatedData = {
+        ...freelancerData,
+        experiences: freelancerData.experiences.filter((_, i) => i !== index),
+      };
+
+      await updateFreelancerProfile(user.id, updatedData);
+      setFreelancerData(updatedData);
+      toast.success("Experiencia eliminada correctamente");
+
+      // Limpiar el estado de colapso para este elemento
+      setCollapsedSections((prev) => {
+        const newExperiences = { ...prev.experiences };
+        delete newExperiences[index];
+        // Reindexar los elementos restantes
+        const reindexed = {};
+        Object.keys(newExperiences)
+          .filter((key) => parseInt(key) > index)
+          .forEach((key) => {
+            reindexed[parseInt(key) - 1] = newExperiences[key];
+          });
+        Object.keys(newExperiences)
+          .filter((key) => parseInt(key) < index)
+          .forEach((key) => {
+            reindexed[key] = newExperiences[key];
+          });
+
+        return {
+          ...prev,
+          experiences: reindexed,
+        };
+      });
+    } catch (error) {
+      console.error("Error al eliminar experiencia:", error);
+      toast.error("Error al eliminar la experiencia");
+    } finally {
+      setLoadingExperience(null);
+    }
   };
 
   // Nuevas funciones para gestionar el portafolio
@@ -240,7 +284,7 @@ const FreelancerProfileTab = ({ user }) => {
     }));
   };
 
-  const handleAddPortfolio = () => {
+  const handleAddPortfolio = async () => {
     if (
       newPortfolio.title.trim() === "" ||
       newPortfolio.description.trim() === ""
@@ -249,47 +293,89 @@ const FreelancerProfileTab = ({ user }) => {
       return;
     }
 
-    setFreelancerData((prev) => ({
-      ...prev,
-      portfolios: [...prev.portfolios, newPortfolio],
-    }));
+    setLoadingPortfolio("new");
+    try {
+      const updatedData = {
+        ...freelancerData,
+        portfolios: [...freelancerData.portfolios, newPortfolio],
+      };
 
-    // Limpiar el formulario de nuevo portafolio
-    setNewPortfolio({
-      title: "",
-      description: "",
-      url: "",
-    });
+      await updateFreelancerProfile(user.id, updatedData);
+      setFreelancerData(updatedData);
+      toast.success("Proyecto añadido correctamente");
+
+      // Limpiar el formulario de nuevo proyecto
+      setNewPortfolio({
+        title: "",
+        description: "",
+        url: "",
+      });
+    } catch (error) {
+      console.error("Error al añadir proyecto:", error);
+      toast.error("Error al añadir el proyecto");
+    } finally {
+      setLoadingPortfolio(null);
+    }
   };
 
-  const handleRemovePortfolio = (index) => {
-    setFreelancerData((prev) => ({
-      ...prev,
-      portfolios: prev.portfolios.filter((_, i) => i !== index),
-    }));
-
-    // Limpiar el estado de colapso para este elemento
-    setCollapsedSections((prev) => {
-      const newPortfolios = { ...prev.portfolios };
-      delete newPortfolios[index];
-      // Reindexar los elementos restantes
-      const reindexed = {};
-      Object.keys(newPortfolios)
-        .filter((key) => parseInt(key) > index)
-        .forEach((key) => {
-          reindexed[parseInt(key) - 1] = newPortfolios[key];
-        });
-      Object.keys(newPortfolios)
-        .filter((key) => parseInt(key) < index)
-        .forEach((key) => {
-          reindexed[key] = newPortfolios[key];
-        });
-
-      return {
-        ...prev,
-        portfolios: reindexed,
+  const handleUpdatePortfolio = async (index) => {
+    setLoadingPortfolio(index);
+    try {
+      const updatedData = {
+        ...freelancerData,
+        portfolios: [...freelancerData.portfolios],
       };
-    });
+
+      await updateFreelancerProfile(user.id, updatedData);
+      toast.success("Proyecto actualizado correctamente");
+    } catch (error) {
+      console.error("Error al actualizar proyecto:", error);
+      toast.error("Error al actualizar el proyecto");
+    } finally {
+      setLoadingPortfolio(null);
+    }
+  };
+
+  const handleRemovePortfolio = async (index) => {
+    setLoadingPortfolio(index);
+    try {
+      const updatedData = {
+        ...freelancerData,
+        portfolios: freelancerData.portfolios.filter((_, i) => i !== index),
+      };
+
+      await updateFreelancerProfile(user.id, updatedData);
+      setFreelancerData(updatedData);
+      toast.success("Proyecto eliminado correctamente");
+
+      // Limpiar el estado de colapso para este elemento
+      setCollapsedSections((prev) => {
+        const newPortfolios = { ...prev.portfolios };
+        delete newPortfolios[index];
+        // Reindexar los elementos restantes
+        const reindexed = {};
+        Object.keys(newPortfolios)
+          .filter((key) => parseInt(key) > index)
+          .forEach((key) => {
+            reindexed[parseInt(key) - 1] = newPortfolios[key];
+          });
+        Object.keys(newPortfolios)
+          .filter((key) => parseInt(key) < index)
+          .forEach((key) => {
+            reindexed[key] = newPortfolios[key];
+          });
+
+        return {
+          ...prev,
+          portfolios: reindexed,
+        };
+      });
+    } catch (error) {
+      console.error("Error al eliminar proyecto:", error);
+      toast.error("Error al eliminar el proyecto");
+    } finally {
+      setLoadingPortfolio(null);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -297,7 +383,15 @@ const FreelancerProfileTab = ({ user }) => {
     setLoading(true);
 
     try {
-      await updateFreelancerProfile(user.id, freelancerData);
+      // Solo enviamos los campos básicos
+      const basicData = {
+        title: freelancerData.title,
+        description: freelancerData.description,
+        hourlyRate: freelancerData.hourlyRate,
+        skills: freelancerData.skills,
+      };
+
+      await updateFreelancerProfile(user.id, basicData);
       toast.success("Perfil de freelancer actualizado correctamente");
     } catch (error) {
       console.error("Error al actualizar perfil de freelancer:", error);
@@ -438,6 +532,9 @@ const FreelancerProfileTab = ({ user }) => {
               </div>
             </div>
           )}
+          <Button type="submit" disabled={loading}>
+            {loading ? "Guardando..." : "Guardar cambios"}
+          </Button>
         </div>
 
         {/* Sección de Experiencias */}
@@ -450,7 +547,7 @@ const FreelancerProfileTab = ({ user }) => {
               {freelancerData.experiences.map((exp, index) => (
                 <div
                   key={index}
-                  className="border border-gray-200 rounded-lg p-4"
+                  className="border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow duration-200 bg-white"
                 >
                   <div className="flex justify-between items-start mb-2">
                     <div className="flex-1">
@@ -569,6 +666,18 @@ const FreelancerProfileTab = ({ user }) => {
                             className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-purple-500"
                           ></textarea>
                         </div>
+                        <div className="md:col-span-2 flex justify-end">
+                          <button
+                            type="button"
+                            onClick={() => handleUpdateExperience(index)}
+                            disabled={loadingExperience === index}
+                            className="bg-purple-800 text-white px-4 py-2 rounded hover:bg-purple-900 text-sm disabled:opacity-50"
+                          >
+                            {loadingExperience === index
+                              ? "Guardando..."
+                              : "Guardar cambios"}
+                          </button>
+                        </div>
                       </div>
                     </>
                   )}
@@ -578,8 +687,10 @@ const FreelancerProfileTab = ({ user }) => {
           )}
 
           {/* Formulario para añadir nueva experiencia */}
-          <div className="border border-dashed border-gray-300 rounded-lg p-4 mb-4">
-            <h4 className="font-medium mb-3">Añadir nueva experiencia</h4>
+          <div className="border-2 border-purple-200 rounded-lg p-4 mb-4 bg-purple-50 hover:bg-purple-100 transition-colors duration-200">
+            <h4 className="font-medium mb-3 text-purple-800">
+              Añadir nueva experiencia
+            </h4>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               <div>
                 <label className="block text-sm text-gray-600 mb-1">
@@ -649,9 +760,12 @@ const FreelancerProfileTab = ({ user }) => {
               <button
                 type="button"
                 onClick={handleAddExperience}
-                className="bg-purple-800 text-white px-4 py-2 rounded hover:bg-purple-900 text-sm"
+                disabled={loadingExperience === "new"}
+                className="bg-purple-800 text-white px-4 py-2 rounded hover:bg-purple-900 text-sm disabled:opacity-50"
               >
-                Añadir Experiencia
+                {loadingExperience === "new"
+                  ? "Añadiendo..."
+                  : "Añadir Experiencia"}
               </button>
             </div>
           </div>
@@ -668,7 +782,7 @@ const FreelancerProfileTab = ({ user }) => {
                 {freelancerData.portfolios.map((portfolio, index) => (
                   <div
                     key={index}
-                    className="border border-gray-200 rounded-lg p-4"
+                    className="border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow duration-200 bg-white"
                   >
                     <div className="flex justify-between items-start mb-2">
                       <div className="flex-1">
@@ -767,6 +881,18 @@ const FreelancerProfileTab = ({ user }) => {
                             placeholder="https://ejemplo.com/proyecto"
                           />
                         </div>
+                        <div className="flex justify-end">
+                          <button
+                            type="button"
+                            onClick={() => handleUpdatePortfolio(index)}
+                            disabled={loadingPortfolio === index}
+                            className="bg-purple-800 text-white px-4 py-2 rounded hover:bg-purple-900 text-sm disabled:opacity-50"
+                          >
+                            {loadingPortfolio === index
+                              ? "Guardando..."
+                              : "Guardar cambios"}
+                          </button>
+                        </div>
                       </div>
                     )}
                   </div>
@@ -775,8 +901,10 @@ const FreelancerProfileTab = ({ user }) => {
             )}
 
           {/* Formulario para añadir nuevo proyecto al portafolio */}
-          <div className="border border-dashed border-gray-300 rounded-lg p-4 mb-4">
-            <h4 className="font-medium mb-3">Añadir nuevo proyecto</h4>
+          <div className="border-2 border-purple-200 rounded-lg p-4 mb-4 bg-purple-50 hover:bg-purple-100 transition-colors duration-200">
+            <h4 className="font-medium mb-3 text-purple-800">
+              Añadir nuevo proyecto
+            </h4>
             <div className="grid grid-cols-1 gap-3">
               <div>
                 <label className="block text-sm text-gray-600 mb-1">
@@ -822,17 +950,16 @@ const FreelancerProfileTab = ({ user }) => {
               <button
                 type="button"
                 onClick={handleAddPortfolio}
-                className="bg-purple-800 text-white px-4 py-2 rounded hover:bg-purple-900 text-sm"
+                disabled={loadingPortfolio === "new"}
+                className="bg-purple-800 text-white px-4 py-2 rounded hover:bg-purple-900 text-sm disabled:opacity-50"
               >
-                Añadir Proyecto
+                {loadingPortfolio === "new"
+                  ? "Añadiendo..."
+                  : "Añadir Proyecto"}
               </button>
             </div>
           </div>
         </div>
-
-        <Button type="submit" disabled={loading}>
-          {loading ? "Guardando..." : "Guardar cambios"}
-        </Button>
       </form>
     </div>
   );

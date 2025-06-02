@@ -8,14 +8,13 @@ const SettingsTab = ({
   handleLogout,
 }) => {
   return (
-    <div className="bg-white p-6 rounded-lg shadow-md">
-      <h2 className="text-xl font-semibold mb-4">Configuración</h2>
-
-      <div className="mb-6">
-        <h3 className="text-lg font-medium mb-3">Cambiar contraseña</h3>
-        <form onSubmit={handleUpdatePassword}>
-          <div className="mb-3">
-            <label className="block text-gray-700 mb-2">
+    <div className="space-y-6">
+      {/* Cambio de contraseña */}
+      <div className="bg-white p-6 rounded-lg shadow-sm">
+        <h2 className="text-xl font-semibold mb-4">Cambiar contraseña</h2>
+        <form onSubmit={handleUpdatePassword} className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               Contraseña actual
             </label>
             <input
@@ -24,22 +23,29 @@ const SettingsTab = ({
               value={formData.currentPassword}
               onChange={handleChange}
               required
-              className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              placeholder="••••••••"
             />
           </div>
-          <div className="mb-3">
-            <label className="block text-gray-700 mb-2">Nueva contraseña</label>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Nueva contraseña
+            </label>
             <input
               type="password"
               name="newPassword"
               value={formData.newPassword}
               onChange={handleChange}
               required
-              className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              placeholder="••••••••"
             />
+            <p className="mt-1 text-sm text-gray-500">
+              La contraseña debe tener al menos 8 caracteres
+            </p>
           </div>
-          <div className="mb-4">
-            <label className="block text-gray-700 mb-2">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               Confirmar nueva contraseña
             </label>
             <input
@@ -48,19 +54,32 @@ const SettingsTab = ({
               value={formData.confirmPassword}
               onChange={handleChange}
               required
-              className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              placeholder="••••••••"
             />
           </div>
-          <Button type="submit">Actualizar contraseña</Button>
+          <Button type="submit" className="w-full sm:w-auto">
+            Actualizar contraseña
+          </Button>
         </form>
       </div>
 
-      <div className="border-t pt-6 mt-6">
-        <h3 className="text-lg font-medium mb-3">Cerrar sesión</h3>
-        <p className="text-gray-600 mb-4">¿Deseas salir de tu cuenta?</p>
-        <Button variant="danger" onClick={handleLogout}>
-          Cerrar sesión
-        </Button>
+      {/* Cerrar sesión */}
+      <div className="bg-white p-6 rounded-lg shadow-sm">
+        <h2 className="text-xl font-semibold mb-4">Cerrar sesión</h2>
+        <div className="space-y-4">
+          <p className="text-gray-600">
+            Al cerrar sesión, tendrás que volver a iniciar sesión para acceder a
+            tu cuenta.
+          </p>
+          <Button
+            variant="danger"
+            onClick={handleLogout}
+            className="w-full sm:w-auto"
+          >
+            Cerrar sesión
+          </Button>
+        </div>
       </div>
     </div>
   );

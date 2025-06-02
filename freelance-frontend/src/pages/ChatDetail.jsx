@@ -119,32 +119,95 @@ const ChatDetail = () => {
           </div>
 
           <div className="bg-white rounded-lg shadow-md overflow-hidden">
-            <div className="p-4 border-b">
-              <h2 className="font-semibold">Mensajes</h2>
+            <div className="p-4 border-b bg-purple-50">
+              <div className="flex items-center">
+                <div className="w-12 h-12 bg-purple-200 rounded-full flex items-center justify-center mr-3">
+                  <span className="font-semibold text-purple-800 text-lg">
+                    {otherUser?.username?.charAt(0) || "U"}
+                  </span>
+                </div>
+                <div>
+                  <h2 className="font-semibold text-gray-900">
+                    {otherUser?.username || "Usuario"}
+                  </h2>
+                </div>
+              </div>
             </div>
 
-            <div className="overflow-y-auto max-h-[500px] p-4">
+            <div className="overflow-y-auto max-h-[500px] p-4 bg-gray-50">
               {chat?.menssage?.length === 0 ? (
-                <p className="text-center py-4 text-gray-500">
-                  No hay mensajes en esta conversación
-                </p>
+                <div className="flex flex-col items-center justify-center h-[400px] text-gray-500">
+                  <svg
+                    className="w-16 h-16 mb-4 text-gray-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+                    />
+                  </svg>
+                  <p>No hay mensajes en esta conversación</p>
+                  <p className="text-sm mt-2">
+                    ¡Envía un mensaje para comenzar!
+                  </p>
+                </div>
               ) : (
                 <div className="space-y-4">
-                  {chat?.menssage?.map((message) => {
+                  {chat?.menssage?.map((message, index) => {
                     const isCurrentUser = message.sender?.id === user.id;
+                    const messageDate = new Date(message.date);
+
+                    // Obtener la fecha del mensaje anterior para comparar
+                    const prevMessage =
+                      index > 0 ? chat.menssage[index - 1] : null;
+                    const prevMessageDate = prevMessage
+                      ? new Date(prevMessage.date)
+                      : null;
+
+                    // Mostrar la fecha solo si es el primer mensaje o si es un día diferente
+                    const showDate =
+                      !prevMessageDate ||
+                      messageDate.toDateString() !==
+                        prevMessageDate.toDateString();
+
                     return (
-                      <div
-                        key={message.id}
-                        className={`flex ${
-                          isCurrentUser ? "justify-end" : "justify-start"
-                        }`}
-                      >
+                      <div key={message.id}>
+                        {showDate && (
+                          <div className="flex justify-center my-4">
+                            <span className="text-xs text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
+                              {messageDate.toLocaleDateString(undefined, {
+                                weekday: "long",
+                                year: "numeric",
+                                month: "long",
+                                day: "numeric",
+                              })}
+                            </span>
+                          </div>
+                        )}
                         <div
-                          className={`max-w-[70%] rounded-lg p-3 ${
-                            isCurrentUser ? "bg-blue-100" : "bg-gray-100"
+                          className={`flex ${
+                            isCurrentUser ? "justify-end" : "justify-start"
                           }`}
                         >
-                          <p>{message.content}</p>
+                          <div
+                            className={`max-w-[70%] rounded-lg p-3 ${
+                              isCurrentUser
+                                ? "bg-purple-600 text-white"
+                                : "bg-white shadow-sm"
+                            }`}
+                          >
+                            <p>{message.content}</p>
+                            <span className="text-xs mt-1 block opacity-70">
+                              {messageDate.toLocaleTimeString([], {
+                                hour: "2-digit",
+                                minute: "2-digit",
+                              })}
+                            </span>
+                          </div>
                         </div>
                       </div>
                     );
@@ -153,16 +216,22 @@ const ChatDetail = () => {
               )}
             </div>
 
-            <div className="p-4 border-t">
+            <div className="p-4 border-t bg-white">
               <form onSubmit={handleSendMessage} className="flex gap-2">
                 <input
                   type="text"
                   value={newMessage}
                   onChange={(e) => setNewMessage(e.target.value)}
                   placeholder="Escribe un mensaje..."
-                  className="flex-1 p-2 border rounded-md"
+                  className="flex-1 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                 />
-                <Button type="submit">Enviar</Button>
+                <Button
+                  type="submit"
+                  className="px-6"
+                  disabled={!newMessage.trim()}
+                >
+                  Enviar
+                </Button>
               </form>
             </div>
           </div>
