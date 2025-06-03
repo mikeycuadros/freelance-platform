@@ -8,6 +8,7 @@ import {
   updateCategory,
   deleteCategory,
 } from "../../services/category";
+import IconSelector from "./IconSelector";
 
 const CategoriesTab = ({ token }) => {
   const [categories, setCategories] = useState([]);
@@ -160,26 +161,23 @@ const CategoriesTab = ({ token }) => {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Icono (emoji o código)
+                  Icono
                 </label>
-                <input
-                  type="text"
-                  className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                <IconSelector
                   value={
                     editingCategory ? editingCategory.icon : newCategory.icon
                   }
-                  onChange={(e) =>
+                  onChange={(icon) =>
                     editingCategory
                       ? setEditingCategory({
                           ...editingCategory,
-                          icon: e.target.value,
+                          icon: icon,
                         })
                       : setNewCategory({
                           ...newCategory,
-                          icon: e.target.value,
+                          icon: icon,
                         })
                   }
-                  placeholder="Ej: 🎨 o fa-paint-brush"
                 />
               </div>
             </div>

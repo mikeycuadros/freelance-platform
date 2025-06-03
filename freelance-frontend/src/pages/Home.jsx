@@ -76,25 +76,32 @@ const Home = () => {
     <Page title="Inicio">
       <div className="min-h-screen flex flex-col">
         {/* Nueva sección Hero */}
-        <section className="bg-lavender-50 py-16">
+        <section className="bg-gradient-to-br from-lavender-50 to-purple-50 py-20">
           <div className="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between">
             <div className="md:w-1/2 mb-8 md:mb-0">
-              <h1 className="text-5xl font-bold mb-4">
+              <h1 className="text-6xl font-bold mb-6 leading-tight">
                 Encuentra el talento{" "}
-                <span className="text-purple-800">freelance</span> perfecto para
-                tu negocio
+                <span className="text-purple-800 bg-gradient-to-r from-purple-800 to-purple-600 bg-clip-text text-transparent">
+                  freelance
+                </span>{" "}
+                perfecto para tu negocio
               </h1>
-              <p className="text-gray-600 mb-6 text-lg">
+              <p className="text-gray-600 mb-8 text-lg leading-relaxed">
                 Conecta con profesionales de primera categoría para tus
                 proyectos. Trabaja con freelancers talentosos para dar vida a
                 tus ideas.
               </p>
               <div className="flex flex-wrap gap-4">
                 <Link to="/freelancer">
-                  <Button className="text-lg px-6 py-3">Buscar Talento</Button>
+                  <Button className="text-lg px-8 py-4 transform hover:scale-105 transition-transform duration-200">
+                    Buscar Talento
+                  </Button>
                 </Link>
                 <Link to="/register">
-                  <Button variant="outline" className="text-lg px-6 py-3">
+                  <Button
+                    variant="outline"
+                    className="text-lg px-8 py-4 transform hover:scale-105 transition-transform duration-200"
+                  >
                     Soy Freelancer
                   </Button>
                 </Link>
@@ -105,11 +112,15 @@ const Home = () => {
                 <img
                   src="/hero-image.jpg"
                   alt="Profesionales colaborando"
-                  className="rounded-4xl shadow-xl"
+                  className="rounded-4xl shadow-2xl transform hover:scale-[1.02] transition-transform duration-300"
                 />
-                <div className="absolute bottom-4 right-4 bg-white p-3 rounded-lg shadow-md">
-                  <p className="text-sm font-medium">Confiado por</p>
-                  <p className="font-bold">+10,000 Empresas</p>
+                <div className="absolute -bottom-6 -right-6 bg-white p-4 rounded-xl shadow-lg border border-gray-100">
+                  <p className="text-sm font-medium text-gray-600">
+                    Confiado por
+                  </p>
+                  <p className="font-bold text-xl text-purple-800">
+                    +10,000 Empresas
+                  </p>
                 </div>
               </div>
             </div>
@@ -117,18 +128,20 @@ const Home = () => {
         </section>
 
         {/* Categorías populares - Nuevo diseño */}
-        <section className="py-12 px-4">
+        <section className="py-16 px-4 bg-white">
           <div className="container mx-auto">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-3xl font-bold">Categorías Populares</h2>
+            <div className="flex justify-between items-center mb-8">
+              <h2 className="text-4xl font-bold bg-gradient-to-r from-purple-800 to-purple-600 bg-clip-text text-transparent">
+                Categorías Populares
+              </h2>
               <Link
                 to="/categories"
-                className="text-purple-800 hover:text-purple-900 flex items-center"
+                className="text-purple-800 hover:text-purple-900 flex items-center group"
               >
                 Ver todas las categorías
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5 ml-1"
+                  className="h-5 w-5 ml-1 transform group-hover:translate-x-1 transition-transform"
                   viewBox="0 0 20 20"
                   fill="currentColor"
                 >
@@ -141,7 +154,7 @@ const Home = () => {
               </Link>
             </div>
 
-            <p className="text-gray-600 mb-8">
+            <p className="text-gray-600 mb-10 text-lg">
               Explora talento por categoría y encuentra la combinación perfecta
               para las necesidades de tu proyecto
             </p>
@@ -151,28 +164,28 @@ const Home = () => {
             ) : errorCategories ? (
               <p className="text-red-500 text-center">{errorCategories}</p>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {categoriesWithFreelancerCount?.slice(0, 6).map((category) => (
                   <div
                     key={category.id}
-                    className="block cursor-pointer"
+                    className="block cursor-pointer group"
                     onClick={(e) => handleCategoryClick(e, category)}
                   >
-                    <div className="bg-gray-50 hover:bg-gray-100 rounded-lg p-6 transition-all duration-300 border border-gray-100 hover:shadow-md">
-                      <div className="mb-4">
+                    <div className="bg-white hover:bg-gray-50 rounded-xl p-8 transition-all duration-300 border border-gray-100 hover:shadow-xl hover:border-purple-100">
+                      <div className="mb-6 transform group-hover:scale-110 transition-transform duration-300">
                         <CategoryIcon type={category.icon} />
                       </div>
-                      <h3 className="text-xl font-semibold mb-2">
+                      <h3 className="text-2xl font-semibold mb-3 group-hover:text-purple-800 transition-colors">
                         {category.name}
                       </h3>
-                      <p className="text-gray-600 text-sm mb-3">
+                      <p className="text-gray-600 text-base mb-4">
                         {category.description || "Sin descripción"}
                       </p>
                       <div className="flex justify-between items-center">
                         <span className="text-sm text-gray-500">
                           {category.freelancerCount || 0} freelancers
                         </span>
-                        <span className="text-purple-800 text-sm font-medium flex items-center">
+                        <span className="text-purple-800 text-sm font-medium flex items-center group-hover:translate-x-1 transition-transform">
                           Explorar
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -197,10 +210,12 @@ const Home = () => {
         </section>
 
         {/* CTA final */}
-        <section className="text-center py-16">
-          <h3 className="text-3xl font-semibold mb-4">¿Listo para empezar?</h3>
+        <section className="text-center py-20 bg-gradient-to-br from-purple-50 to-lavender-50">
+          <h3 className="text-4xl font-bold mb-6 bg-gradient-to-r from-purple-800 to-purple-600 bg-clip-text text-transparent">
+            ¿Listo para empezar?
+          </h3>
           <Link to="/register">
-            <Button className="text-lg px-6 py-3">
+            <Button className="text-lg px-8 py-4 transform hover:scale-105 transition-transform duration-200">
               Regístrate y empieza ahora
             </Button>
           </Link>

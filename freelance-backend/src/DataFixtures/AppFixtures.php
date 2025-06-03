@@ -272,74 +272,74 @@ class AppFixtures extends Fixture
         $categories = [
             [
                 'name' => 'Desarrollo Web',
-                'icon' => 'code',
+                'icon' => 'Code',
                 'description' => 'Sitios web, aplicaciones web y desarrollo de software personalizado',
                 'skills' => ['HTML', 'CSS', 'JavaScript', 'PHP', 'React', 'Angular', 'Vue.js', 'Node.js', 'Laravel', 'Symfony', 'WordPress', 'Shopify', 'Wix', 'Webflow']
             ],
             [
                 'name' => 'Diseño y Creatividad',
-                'icon' => 'design',
+                'icon' => 'PencilAlt',
                 'description' => 'Diseño gráfico, diseño UI/UX y trabajo creativo',
                 'skills' => ['Photoshop', 'Illustrator', 'Figma', 'Sketch', 'InDesign', 'UI/UX', 'Diseño de Logos', 'Branding', 'Ilustración', 'Animación', 'Diseño Editorial']
             ],
             [
                 'name' => 'Redacción y Traducción',
-                'icon' => 'writing',
+                'icon' => 'Newspaper',
                 'description' => 'Redacción de contenido, copywriting y servicios de traducción',
                 'skills' => ['Copywriting', 'Redacción SEO', 'Traducción', 'Corrección', 'Transcripción', 'Redacción Técnica', 'Ghostwriting', 'Blogs', 'Artículos', 'Guiones']
             ],
             [
                 'name' => 'Marketing y SEO',
-                'icon' => 'marketing',
+                'icon' => 'ChartPie',
                 'description' => 'Marketing digital, optimización SEO y publicidad',
                 'skills' => ['SEO', 'SEM', 'Google Ads', 'Facebook Ads', 'Instagram Ads', 'Email Marketing', 'Marketing de Contenidos', 'Análisis de Datos', 'Growth Hacking', 'Estrategia Digital']
             ],
             [
                 'name' => 'Video y Animación',
-                'icon' => 'video',
+                'icon' => 'Video',
                 'description' => 'Edición de video, gráficos en movimiento y servicios de animación',
                 'skills' => ['Edición de Video', 'After Effects', 'Premiere Pro', 'Animación 2D', 'Animación 3D', 'Motion Graphics', 'VFX', 'Videografía', 'Producción de Video', 'Storyboarding']
             ],
             [
                 'name' => 'Ciencia de Datos',
-                'icon' => 'data',
+                'icon' => 'Database',
                 'description' => 'Análisis de datos, visualización y aprendizaje automático',
                 'skills' => ['Python', 'R', 'SQL', 'Machine Learning', 'Deep Learning', 'Tableau', 'Power BI', 'Estadística', 'Big Data', 'Data Mining', 'NLP', 'Computer Vision']
             ],
             // Categorías adicionales basadas en la imagen
             [
                 'name' => 'Desarrollo Móvil',
-                'icon' => 'mobile',
+                'icon' => 'Mobile',
                 'description' => 'iOS, Android y desarrollo de aplicaciones móviles multiplataforma',
                 'skills' => ['Swift', 'Kotlin', 'Java', 'Flutter', 'React Native', 'Xamarin', 'Ionic', 'Android Studio', 'Xcode', 'Firebase', 'App Store Optimization']
             ],
             [
                 'name' => 'Contabilidad y Finanzas',
-                'icon' => 'accounting',
+                'icon' => 'MoneyBillAlt',
                 'description' => 'Contabilidad, análisis financiero y preparación de impuestos',
                 'skills' => ['Contabilidad', 'Finanzas', 'Impuestos', 'Auditoría', 'Presupuestos', 'Análisis Financiero', 'Planificación Fiscal', 'QuickBooks', 'Excel Financiero', 'SAP']
             ],
             [
                 'name' => 'Servicios Legales',
-                'icon' => 'legal',
+                'icon' => 'Briefcase',
                 'description' => 'Asesoramiento legal, revisión de contratos y cumplimiento normativo',
                 'skills' => ['Contratos', 'Propiedad Intelectual', 'Derecho Mercantil', 'Derecho Laboral', 'Términos y Condiciones', 'RGPD', 'Compliance', 'Asesoría Legal', 'Patentes', 'Marcas']
             ],
             [
                 'name' => 'Atención al Cliente',
-                'icon' => 'support',
+                'icon' => 'UserTie',
                 'description' => 'Servicio al cliente, soporte técnico y asistencia virtual',
                 'skills' => ['Atención al Cliente', 'Soporte Técnico', 'Asistencia Virtual', 'Gestión de Tickets', 'Chat en Vivo', 'Email Support', 'CRM', 'Zendesk', 'Intercom', 'Freshdesk']
             ],
             [
                 'name' => 'Audio y Música',
-                'icon' => 'audio',
+                'icon' => 'Microphone',
                 'description' => 'Locución, producción musical y edición de audio',
                 'skills' => ['Producción Musical', 'Mezcla', 'Masterización', 'Composición', 'Locución', 'Efectos de Sonido', 'Podcast', 'Jingles', 'Edición de Audio', 'Logic Pro', 'Ableton Live']
             ],
             [
                 'name' => 'Ingeniería y Arquitectura',
-                'icon' => 'engineering',
+                'icon' => 'Building',
                 'description' => 'Diseño CAD, ingeniería de productos y servicios arquitectónicos',
                 'skills' => ['AutoCAD', 'Revit', 'SketchUp', 'SolidWorks', 'Diseño 3D', 'Modelado BIM', 'Renderizado', 'Planos Arquitectónicos', 'Diseño de Interiores', 'Ingeniería Civil']
             ],

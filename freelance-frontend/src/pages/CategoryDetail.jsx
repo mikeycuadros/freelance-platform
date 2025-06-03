@@ -202,7 +202,9 @@ const CategoryDetail = () => {
                         className="w-12 h-12 rounded-full object-cover"
                       />
                       <div>
-                        <h3 className="font-semibold">{freelancer.userId.username}</h3>
+                        <h3 className="font-semibold">
+                          {freelancer.userId.username}
+                        </h3>
                         <p className="text-sm text-gray-600">
                           {freelancer.title || "Freelancer"}
                         </p>
