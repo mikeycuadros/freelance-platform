@@ -31,8 +31,9 @@ services:
     image: mysql:8.0
     ports:
       - "3306:3306"
-    env_file:
-      - .env
+    environment:
+      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+      - MYSQL_DATABASE=freelance_db
     volumes:
       - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
       - database_data:/var/lib/mysql
@@ -44,13 +45,13 @@ services:
     ports:
       - "8080:80"
     environment:
-      PMA_HOST: database
-    env_file:
-      - .env
+      - PMA_HOST: database
+      - PMA_USER=root
     depends_on:
       - database
     networks:
       - app-network
+
   nginx:
     build:
       context: ./nginx
