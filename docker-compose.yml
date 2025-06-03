@@ -45,7 +45,7 @@ services:
     ports:
       - "8080:80"
     environment:
-      - PMA_HOST: database
+      - PMA_HOST=database
       - PMA_USER=root
     depends_on:
       - database
