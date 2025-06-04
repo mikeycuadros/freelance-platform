@@ -27,12 +27,16 @@ export const getAllFreelancers = async () => {
 // Obtener un freelancer por su ID o el del usuario autenticado
 export const getFreelancerById = async (id) => {
   const endpoint = id ? `/freelancers/${id}` : "/user/freelancer";
-  return fetchFromApi(endpoint, {
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    },
-  });
+  const headers = {
+    "Content-Type": "application/json",
+  };
+
+  // Solo incluir el token si estamos accediendo al perfil propio del usuario
+  if (!id) {
+    headers.Authorization = `Bearer ${localStorage.getItem("token")}`;
+  }
+
+  return fetchFromApi(endpoint, { headers });
 };
 
 // Actualizar el perfil de un freelancer
