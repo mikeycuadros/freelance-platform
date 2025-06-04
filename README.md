@@ -53,19 +53,32 @@ git clone [URL_DEL_REPOSITORIO]
 cd freelance-platform
 ```
 
-2. Iniciar los contenedores:
+2. Configurar los archivos .env:
+
+   - En el directorio `/freelance-backend`:
+
+     - Para desarrollo local con Docker: usar `localhost`
+     - Para despliegue en AWS: usar la IP de la instancia
+     - Si se usa IP elástica en AWS: configurar una única vez con esa IP
+
+   - En el directorio `/freelance-frontend`:
+     - Para desarrollo local con Docker: usar `localhost`
+     - Para despliegue en AWS: usar la IP de la instancia
+     - Si se usa IP elástica en AWS: configurar una única vez con esa IP
+
+3. Iniciar los contenedores:
 
 ```bash
 docker-compose up -d
 ```
 
-3. Generar las claves JWT para el backend:
+4. Generar las claves JWT para el backend:
 
 ```bash
 docker-compose exec freelance-backend php bin/console lexik:jwt:generate-keypair
 ```
 
-4. Acceder a la aplicación:
+5. Acceder a la aplicación:
    - Frontend: http://localhost:5173
    - Backend API: http://localhost:8000
    - phpMyAdmin: http://localhost:8080
