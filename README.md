@@ -2,7 +2,7 @@
 
 ## Descripción
 
-Plataforma de freelance que conecta profesionales con clientes, permitiendo la gestión de proyectos, comunicación y pagos.
+Sistema web que permite a freelancers ofrecer sus servicios y a clientes contratarlos. Incluye funcionalidades básicas de registro, perfil profesional, búsqueda de servicios y sistema de mensajería.
 
 ## Puertos y Servicios
 
